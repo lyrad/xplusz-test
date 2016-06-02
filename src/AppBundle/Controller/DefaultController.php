@@ -25,6 +25,8 @@ class DefaultController extends Controller
 	if( false === $session->has('previous_q') ) {
 		$previous_q = array();
 		$session->set('previous_q', $previous_q);
+	} else {
+		$previous_q = $session->get('previous_q');
 	}
 
 	// Create TwitterSearch object
@@ -36,10 +38,11 @@ class DefaultController extends Controller
 	 $form->handleRequest($request);
 
     	if($form->isSubmitted() && $form->isValid()) {
-		// Save q in session
-		$previous_q = $session->get('previous_q');
-		$previous_q[] = $form->get('q')->getData();
-		$session->set('previous_q', $previous_q);
+		// Save query in session
+		if( false === in_array( $form->get('q')->getData(), $previous_q ) ) {
+			$previous_q[] = $form->get('q')->getData();
+			$session->set('previous_q', $previous_q);
+		}
 
 		$endroidtwitter = $this->get('endroid.twitter');
 
@@ -51,7 +54,7 @@ class DefaultController extends Controller
 		$tweets = json_decode($response->getContent());
 
     	} else {
-		$tweets = [];
+		$tweets = [ 'statuses' => [] ];
 	}
 
 	return $this->render(

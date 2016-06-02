@@ -37,7 +37,8 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     form_theme:
-        - bootstrap_3_layout.html.twig
+        - bootstrap_3_horizontal_layout.html.twig
+        #- bootstrap_3_layout.html.twig
 
 # Doctrine Configuration
 doctrine:
@@ -69,8 +70,46 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
+# Endroid twitter search API query Bundle
 endroid_twitter:
     consumer_key: "oRciFFFj1HyVGNScmq3f8kB9m"
     consumer_secret: "W0CSsSq99HoyIwKQjkpo5b2FtXm2DcxfjLxdQcBoDhSpNzMBF4"
     access_token: "3313128789-alLYywFNehFZqOSuPrEjUmVHW21uK9F0R5728tW"
     access_token_secret: "8MLkcSSpwnInXSzzflnR7uGfFKu4IGjcJIIUYFw53RNbV"
+
+# Asseticssetic:
+assetic:
+    debug:          '%kernel.debug%'
+    use_controller: '%kernel.debug%'
+    filters:
+        cssrewrite: ~
+    assets:
+        bootstrap_js:
+            inputs:
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/dist/js/bootstrap.js
+        bootstrap_css:
+            inputs:
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/dist/css/bootstrap.css
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/dist/css/bootstrap-theme.css
+            filters: [cssrewrite]
+
+        bootstrap_glyphicons_ttf:
+            inputs:
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf
+            output: "fonts/glyphicons-halflings-regular.ttf"
+        bootstrap_glyphicons_eot:
+            inputs:
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/dist/fonts/glyphicons-halflings-regular.eot
+            output: "fonts/glyphicons-halflings-regular.eot"
+        bootstrap_glyphicons_svg:
+            inputs:
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/dist/fonts/glyphicons-halflings-regular.svg
+            output: "fonts/glyphicons-halflings-regular.svg"
+        bootstrap_glyphicons_woff:
+            inputs:
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/dist/fonts/glyphicons-halflings-regular.woff
+            output: "fonts/glyphicons-halflings-regular.woff"
+
+        jquery:
+            inputs:
+                - %kernel.root_dir%/../vendor/components/jquery/jquery.js

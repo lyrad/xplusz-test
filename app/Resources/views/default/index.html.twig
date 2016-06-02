@@ -1,19 +1,112 @@
-<script id="twitter-wjs" type="text/javascript" async defer src="//platform.twitter.com/widgets.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% stylesheets '@bootstrap_css' %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    <style>
+	body {
+		background-color: #f1f1f1;
+	}
+	.page-header {
+		background-color: #ed1c24;
+		margin: 0;
+	}
 
-{{ form_start(form) }}
-{{ form_widget(form) }}
-{{ form_end(form) }}
+	.page-header h1, h2, h3{
+		margin-top: 0;
+		padding-top: 5px;
+		color: white;
+	}
 
-{% for q in previous_q %}
-<span class="label label-default">{{ q }}</span>
-{% endfor %}
+	.affix {
+		width:100%;
+	}
+	
+	.label {
+		line-height: 2;
+	}
+	
+	.pager {
+		margin: 0;
+	}
+
+	.form-control {
+		width: auto;
+	}
+	
+	label {
+		color: white;
+	}
+
+    </style>
+    
+
+    {% javascripts '@jquery' '@bootstrap_js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script id="twitter-wjs" type="text/javascript" async defer src="//platform.twitter.com/widgets.js"></script>
+</head>
+<body>
+<div class="page-header" data-spy="affix" data-offset-top="0">
+    <div class="row">
+        <div class="col-md-1">
+            <img alt="X PLUS Z" src="/images/logo.png">
+        </div>
+        <div class="col-md-7">
+            <h1>PHP/Symfony Test Task <small></small></h1>
+            {{ form_start(form) }}
+		<div class="row">
+			<div class="form-group col-md-9">
+				{{ form_label(form.q, 'Keyword', { 'label_attr': {'class': 'col-md-4 control-label'} }) }}
+				{{ form_widget(form.q, {'attr': {'class' : 'form-control'} }) }}
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-md-5">
+					{{ form_label(form.count, 'Tweets per page', { 'label_attr': {'class': 'col-md-9 control-label'} }) }}
+					{{ form_widget(form.count, {'attr': {'class' : 'col-md-1 form-control'} }) }}
+			</div>
+			<div class="form-group col-md-1">
+				{{ form_widget(form.send, { 'label': 'Send' }) }}
+			</div>
+			<div class="col-md-4">
+                        	<nav>
+                                	<ul class="pager">
+                                	        <li><a href="#">Previous</a></li>
+                                	        <li><a href="#">Next</a></li>
+                                	</ul>
+                        	</nav>
+			</div>
+		</div>
+            {{ form_end(form) }}
+        </div>
+	<div  class="col-md-4">
+		<h3>Searched keywords :</h3>
+		<h2>
+		{% for q in previous_q %}
+        		<span class="label label-warning">{{ q }}</span>
+		{% endfor %}
+		</h2>
+	</div>
+    </div>
+</div>
+
+{{ dump(tweets)  }}
 
 {% for tweet in tweets.statuses %}
-<blockquote class="twitter-tweet" data-link-color="#55acee" lang="{{ tweet.lang }}">
-	<p lang="{{ tweet.lang }}">{{ tweet.text  }}</p>
-	— {{ tweet.user.name}} (@{{ tweet.user.screen_name }})
-	<a href="https://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}">{{ tweet.created_at }}</a>
-</blockquote>
+<div class="row">
+	<div class="col-md-3"></div>
+	<div class="col-md-6" style="z-index:-99999">
+	<blockquote class="twitter-tweet" data-link-color="#55acee" lang="{{ tweet.lang }}">
+		<p lang="{{ tweet.lang }}">{{ tweet.text  }}</p>
+		— {{ tweet.user.name}} (@{{ tweet.user.screen_name }})
+		<a href="https://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}">{{ tweet.created_at }}</a>
+	</blockquote>
+	</div>
+	<div class="col-md-3"></div>
+</div>
 {% endfor %}
 
-
+</body>
+</html>
