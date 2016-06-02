@@ -1,0 +1,19 @@
+<script id="twitter-wjs" type="text/javascript" async defer src="//platform.twitter.com/widgets.js"></script>
+
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+
+{% for q in previous_q %}
+<span class="label label-default">{{ q }}</span>
+{% endfor %}
+
+{% for tweet in tweets.statuses %}
+<blockquote class="twitter-tweet" data-link-color="#55acee" lang="{{ tweet.lang }}">
+	<p lang="{{ tweet.lang }}">{{ tweet.text  }}</p>
+	— {{ tweet.user.name}} (@{{ tweet.user.screen_name }})
+	<a href="https://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}">{{ tweet.created_at }}</a>
+</blockquote>
+{% endfor %}
+
+
