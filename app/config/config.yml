@@ -36,6 +36,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form_theme:
+        - bootstrap_3_layout.html.twig
 
 # Doctrine Configuration
 doctrine:
@@ -66,3 +68,9 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+endroid_twitter:
+    consumer_key: "oRciFFFj1HyVGNScmq3f8kB9m"
+    consumer_secret: "W0CSsSq99HoyIwKQjkpo5b2FtXm2DcxfjLxdQcBoDhSpNzMBF4"
+    access_token: "3313128789-alLYywFNehFZqOSuPrEjUmVHW21uK9F0R5728tW"
+    access_token_secret: "8MLkcSSpwnInXSzzflnR7uGfFKu4IGjcJIIUYFw53RNbV"

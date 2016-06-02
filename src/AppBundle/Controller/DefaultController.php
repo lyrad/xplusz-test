@@ -13,9 +13,21 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..'),
-        ]);
+	$twitter = $this->get('endroid.twitter');
+
+	// Retrieve the user's timeline
+	// $tweets = $twitter->getTimeline(array(
+	//    'count' => 5
+	// ));
+
+	// Or retrieve the timeline using the generic query method
+	$response = $twitter->query('search/tweets', 'GET', 'json', array( 'q' => 'obama' ));
+	$tweets = json_decode($response->getContent());
+	var_dump($tweets);
+
+	return $this->render(
+        	'default/index.html.twig',
+        	array()
+    	);
     }
 }
