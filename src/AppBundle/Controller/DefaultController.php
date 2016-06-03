@@ -35,7 +35,7 @@ class DefaultController extends Controller
 	// Create form
 	$form = $this->createForm(TwitterSearchType::class, $twittersearch);
 
-	 $form->handleRequest($request);
+	$form->handleRequest($request);
 
     	if($form->isSubmitted() && $form->isValid()) {
 		// Save query in session
@@ -44,24 +44,73 @@ class DefaultController extends Controller
 			$session->set('previous_q', $previous_q);
 		}
 
+		// If next button is clicked and next max id stored in session
+		if ($form->get('next')->isClicked() && $session->has('next_max_id')) {
+			$query_param = array(
+                                'q' => $form->get('q')->getData(),
+                                'count' => $form->get('count')->getData(),
+				'max_id' => $session->get('next_max_id')
+                        );
+		// If previous button is clicked
+		} else if($form->get('previous')->isClicked()) {
+			$query_param = array(
+                                'q' => $form->get('q')->getData(),
+                                'count' => $form->get('count')->getData(),
+				'max_id' => $session->get('prev_max_id')
+                        );
+			var_dump($session->get('prev_max_id'));
+		// If send button is clicked
+		} else {
+			$session->remove('next_max_id');
+			$session->remove('prev_max_id');
+			$query_param = array(
+                        	'q' => $form->get('q')->getData(),
+                        	'count' => $form->get('count')->getData(),
+                	);
+		}
+
+		// Query Twitter API & get the response
 		$endroidtwitter = $this->get('endroid.twitter');
+		$response = $endroidtwitter->query('search/tweets', 'GET', 'json', $query_param);
+		$tweets = json_decode($response->getContent(), true);
 
-		$response = $endroidtwitter->query('search/tweets', 'GET', 'json', array(
-			'q' => $form->get('q')->getData(),
-			'count' => $form->get('count')->getData()
-		));
+		// If max_id/since id exists in the response, update form fields
+		if( true === isset($tweets['search_metadata']['next_results']) ) {
+			$next_query_param = [];
+			parse_str(parse_url($tweets['search_metadata']['next_results'], PHP_URL_QUERY), $next_query_param);
+			if( true === isset($next_query_param['max_id']) && true === is_numeric($next_query_param['max_id']) ) {
+				$session->set('next_max_id', $next_query_param['max_id']);
+				$session->set('prev_max_id', $tweets['search_metadata']['max_id_str']);
+				var_dump($session->get('next_max_id'));
+				var_dump($session->get('prev_max_id'));
+				$disableNext = false;
+				$disablePrev = false;
+			} else {
+				var_dump("no param");
+				
+			}
+		} else {
+			// No next result can be found
+			$disableNext = true;
+			$disablePrev = true;
+		}
 		
-		$tweets = json_decode($response->getContent());
-
     	} else {
 		$tweets = [ 'statuses' => [] ];
 	}
 
+	// Abandon ship... Can't make a pagination with twitter api... See debug infos...
+	$disableNext = true;
+	$disablePrev = true;
+
+	// Return template
 	return $this->render(
                 'default/index.html.twig',
                 array( 
 			'form' => $form->createView(),
 			'tweets' => $tweets,
+			'disableNext' => $disableNext,
+			'disablePrev' => $disablePrev,
 			'previous_q' => $previous_q
 		)
         );	
