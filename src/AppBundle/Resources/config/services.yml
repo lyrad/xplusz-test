@@ -1,0 +1,5 @@
+services:
+    app.form.type.twittersearch:
+        class: AppBundle\Form\Type\TwitterSearchType
+        tags:
+             - { name: form.type }
